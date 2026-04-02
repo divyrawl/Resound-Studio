@@ -6,7 +6,7 @@ echo      Resound Studio - Pro System Launcher
 echo ============================================================
 
 :: 1. Core Dependency Check
-echo [1/4] Checking core dependencies...
+echo [1/5] Checking core dependencies...
 where python >nul 2>nul
 if %ERRORLEVEL% neq 0 (
     echo [ERROR] Python not found in system PATH.
@@ -22,7 +22,7 @@ if %ERRORLEVEL% neq 0 (
 )
 
 :: 2. Environment Check
-echo [2/4] Verifying backend virtual environment...
+echo [2/5] Verifying backend virtual environment...
 if not exist "apps\api\venv" (
     echo [ERROR] 'apps\api\venv' missing. Run 'fix_gpu.bat' once to setup your environment.
     pause
@@ -47,12 +47,16 @@ if "%CUDA_STATUS%"=="CUDA Available: False" (
     echo.
 )
 
-:: 3. Launch Backend
-echo [3/4] Starting Backend API (Port 8000)...
+:: 3. Model Check
+echo [3/5] Verifying and downloading required models (Qwen3-TTS 1.7B Base)...
+call download_models.bat
+
+:: 4. Launch Backend
+echo [4/5] Starting Backend API (Port 8000)...
 start "Resound Backend" cmd /k "cd apps\api && venv\Scripts\activate && python -m uvicorn main:app --reload --port 8000"
 
-:: 4. Launch Frontend
-echo [4/4] Starting Frontend Web App (Port 3000)...
+:: 5. Launch Frontend
+echo [5/5] Starting Frontend Web App (Port 3000)...
 start "Resound Frontend" cmd /k "cd apps\web && pnpm dev"
 
 echo.

@@ -29,12 +29,10 @@ if %ERRORLEVEL% neq 0 (
     set DOCKER_COMPOSE=docker-compose
 )
 
-:: Model download pre-flight (Optional but recommended)
-echo [1/3] Would you like to pre-download the Qwen3-TTS 1.7B Base model to the host?
-set /p download_models="Recommended to avoid long build times (y/n): "
-if /i "!download_models!"=="y" (
-    call download_models.bat
-)
+:: Model download pre-flight
+echo [1/3] Pre-downloading the Qwen3-TTS 1.7B Base model to the host...
+echo This is required to avoid long build times and ensure offline availability.
+call download_models.bat
 
 echo [2/3] Building and starting containers (This may take a few minutes)...
 %DOCKER_COMPOSE% up -d --build

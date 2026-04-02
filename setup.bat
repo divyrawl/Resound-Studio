@@ -103,15 +103,10 @@ if not exist "apps\web\.env.local" (
     echo NEXT_PUBLIC_BACKEND_URL=http://localhost:8000 > apps\web\.env.local
 )
 
-:: 6. Model Pre-download (Optional)
+:: 6. Model Pre-download
 echo [6/7] Pre-downloading AI models (Qwen3-TTS 1.7B Base)...
-echo This is highly recommended to avoid download delays during first use.
-set /p download_models="Would you like to download the required 1.7B Base model now? (y/n): "
-if /i "!download_models!"=="y" (
-    call download_models.bat
-) else (
-    echo [INFO] Skipping pre-download. Models will be downloaded on first use.
-)
+echo This is required to avoid download delays during first use.
+call download_models.bat
 
 :: 7. Final Check
 echo [7/7] Finalizing setup...
