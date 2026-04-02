@@ -1,0 +1,39 @@
+services:
+  api:
+    build:
+      context: ./apps/api
+      dockerfile: Dockerfile
+    command: gunicorn main:app -w 2 -k uvicorn.workers.UvicornWorker -b 0.0.0.0:8000 --timeout 120
+    ports:
+      - "8000:8000"
+    volumes:
+      - hf_cache:/app/data/models
+      - ./apps/api/data:/app/data
+      - ./apps/api/engines:/app/engines
+    environment:
+      - IS_DOCKER=true
+      - HF_HOME=/app/data/models
+      - DATABASE_URL=sqlite:///app/data/resound.db
+      - ALLOWED_ORIGINS=${ALLOWED_ORIGINS:-*}
+    restart: always
+    healthcheck:
+      test: ["CMD", "curl", "-f", "http://localhost:8000/health"]
+      interval: 30s
+      timeout: 10s
+      retries: 3
+
+  web:
+    build:
+      context: .
+      dockerfile: apps/web/Dockerfile
+    ports:
+      - "3000:3000"
+    environment:
+      - NEXT_PUBLIC_BACKEND_URL=${NEXT_PUBLIC_BACKEND_URL:-http://localhost:8000}
+    depends_on:
+      api:
+        condition: service_healthy
+    restart: always
+
+volumes:
+  hf_cache:

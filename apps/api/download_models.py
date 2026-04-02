@@ -10,14 +10,18 @@ MODELS = {
     "qwen-0.6b": "Qwen/Qwen3-TTS-12Hz-0.6B-Base",
 }
 
+CORE_MODEL = "qwen-1.7b"
+
 def download_all():
     print("=" * 60)
     print("  Resound Studio - Model Downloader")
     print("=" * 60)
-    print("\nEnsuring all required models are downloaded to the HF cache...\n")
+    print("\nEnsuring all required models are downloaded to the HF cache...")
+    print(f"Primary Model: {MODELS[CORE_MODEL]} (1.7B Base)\n")
 
     for model_id, hf_repo in MODELS.items():
-        print(f"[*] Checking/Downloading: {hf_repo} ({model_id})")
+        is_core = " (CORE)" if model_id == CORE_MODEL else ""
+        print(f"[*] Checking/Downloading{is_core}: {hf_repo} ({model_id})")
         try:
             snapshot_download(repo_id=hf_repo)
             print(f"    [OK] {model_id} is ready.\n")
@@ -26,6 +30,7 @@ def download_all():
 
     print("=" * 60)
     print("  ALL MODELS READY")
+    print("  You can now use 'run.bat' or 'setup_docker.bat'")
     print("=" * 60)
 
 if __name__ == "__main__":

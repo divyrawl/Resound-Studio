@@ -104,8 +104,9 @@ if not exist "apps\web\.env.local" (
 )
 
 :: 6. Model Pre-download (Optional)
-echo [6/7] Pre-downloading AI models (highly recommended)...
-set /p download_models="Would you like to download all AI models now? (y/n): "
+echo [6/7] Pre-downloading AI models (Qwen3-TTS 1.7B Base)...
+echo This is highly recommended to avoid download delays during first use.
+set /p download_models="Would you like to download the required 1.7B Base model now? (y/n): "
 if /i "!download_models!"=="y" (
     call download_models.bat
 ) else (

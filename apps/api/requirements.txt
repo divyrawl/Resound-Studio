@@ -5,6 +5,7 @@
 # Core Local Server
 fastapi==0.115.0
 uvicorn[standard]==0.30.6
+gunicorn==23.0.0
 python-multipart==0.0.9
 pydantic==2.9.2
 sqlalchemy==2.0.0
@@ -25,7 +26,7 @@ pydub==0.25.1
 librosa==0.10.1
 
 # TTS Engines
-qwen-tts>=0.1.0
+qwen-tts==0.1.0
 
 # Utilities
 python-dotenv==1.0.1

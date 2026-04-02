@@ -78,15 +78,19 @@ from utils.features import (
 from utils.api_key_middleware import ApiKeyMiddleware, API_KEY
 
 # ---- Logging ----
-log_file_path = os.path.join(os.path.dirname(__file__), "data", "resound-studio.log")
-os.makedirs(os.path.dirname(log_file_path), exist_ok=True)
+# Use simple StreamHandler for Docker logs unless explicitly configured for file logging
+IS_DOCKER = os.environ.get("IS_DOCKER", "false").lower() == "true"
+log_handlers = [logging.StreamHandler()]
+
+if not IS_DOCKER:
+    log_file_path = os.path.join(os.path.dirname(__file__), "data", "resound-studio.log")
+    os.makedirs(os.path.dirname(log_file_path), exist_ok=True)
+    log_handlers.append(logging.FileHandler(log_file_path, encoding="utf-8"))
+
 logging.basicConfig(
     level=logging.INFO,
     format="%(asctime)s [%(name)s] %(levelname)s: %(message)s",
-    handlers=[
-        logging.StreamHandler(),
-        logging.FileHandler(log_file_path, encoding="utf-8")
-    ]
+    handlers=log_handlers
 )
 logger = logging.getLogger("resound-studio")
 
@@ -205,10 +209,11 @@ async def global_exception_handler(request: Request, exc: Exception):
 
 
 # CORS for Next.js frontend
+allowed_origins = os.environ.get("ALLOWED_ORIGINS", "*").split(",")
 app.add_middleware(
     CORSMiddleware,
-    allow_origins=["*"],
-    allow_credentials=False,
+    allow_origins=allowed_origins,
+    allow_credentials=True if "*" not in allowed_origins else False,
     allow_methods=["*"],
     allow_headers=["*"],
 )

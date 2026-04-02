@@ -1,0 +1,23 @@
+# Python cache
+__pycache__/
+*.py[cod]
+*$py.class
+
+# Local environment
+venv/
+.env
+.venv
+env/
+
+# Data and logs
+data/*.log
+data/resound-studio.log
+*.txt
+
+# Build artifacts
+dist/
+build/
+*.egg-info/
+
+# Model cache (should be mounted from volume)
+data/models/
